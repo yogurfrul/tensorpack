@@ -17,12 +17,12 @@ def GroupNorm(x, group=32, gamma_initializer=tf.constant_initializer(1.)):
     shape = x.get_shape().as_list()
     ndims = len(shape)
     assert ndims == 4, shape
-    chan = shape[1]
+    chan = shape[3]
     assert chan % group == 0, chan
     group_size = chan // group
 
     orig_shape = tf.shape(x)
-    h, w = orig_shape[2], orig_shape[3]
+    h, w = orig_shape[1], orig_shape[2]
 
     x = tf.reshape(x, tf.stack([-1, h, w, group, group_size]))
 
