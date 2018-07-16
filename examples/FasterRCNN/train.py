@@ -59,7 +59,7 @@ class DetectionModel(ModelDesc):
     def preprocess(self, image):
         image = tf.expand_dims(image, 0)
         image = image_preprocess(image, bgr=True)
-        return tf.transpose(image, [0, 3, 1, 2])
+        return image
 
     def optimizer(self):
         lr = tf.get_variable('learning_rate', initializer=0.003, trainable=False)
@@ -306,8 +306,8 @@ class ResNetFPNModel(DetectionModel):
         if cfg.MODE_MASK:
             gt_masks = inputs[-1]
 
+        image_shape2d = tf.shape(image)[:2]     # h,w
         image = self.preprocess(image)     # 1CHW
-        image_shape2d = tf.shape(image)[2:]     # h,w
 
         c2345 = resnet_fpn_backbone(image, cfg.BACKBONE.RESNET_NUM_BLOCK)
         p23456 = fpn_model('fpn', c2345)
